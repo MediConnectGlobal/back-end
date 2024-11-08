@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addPrescription, deletePrescription, getAllPrescriptions, getOnePrescription, updatePrescription } from "../controller/prescription";
+import { addPrescription, deletePrescription, getAllPrescriptions, getOnePrescription, updatePrescription } from "../controller/prescription.js";
 
 const prescriptionRouter = Router();
 

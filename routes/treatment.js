@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { addTreatment, deleteTreatment, getAllTreatments, getOneTreatment, updateTreatment } from "../controller/treatment";
+import { addTreatment, deleteTreatment, getAllTreatments, getOneTreatment, updateTreatment } from "../controller/treatment.js";
+import { isAuthenticated, hasPermission } from "../middleware/authenticator.js";
 
 const treatmentRouter = Router();
 

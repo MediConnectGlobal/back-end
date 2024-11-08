@@ -11,6 +11,6 @@ time: {type: String, required: true},
     timestamps: true
 });
 
-staffSchema.plugin(toJSON)
+bookingSchema.plugin(toJSON)
 
 export const BookingModel = model('Booking', bookingSchema)
