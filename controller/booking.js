@@ -24,74 +24,139 @@ const getAiBookingSuggestions = async (userId) => {
     return aiSuggestions; // Return suggested times
   };
   
-  export const addBooking = async (req, res, next) => {
-      try {
-          // Validate request body
-          const { error, value } = bookingValidationSchema.validate(req.body);
-          if (error) {
-              return res.status(422).json(error);
-          }
+//   export const addBooking = async (req, res, next) => {
+//       try {
+//           // Validate request body
+//           const { error, value } = bookingValidationSchema.validate(req.body);
+//           if (error) {
+//               return res.status(422).json(error);
+//           }
   
-          // Simulate AI suggestion from Google Gemini (or similar)
-          const userId = req.body.userId;  // Assume userId is passed in the request
-          const aiSuggestedTimes = await getAiBookingSuggestions(userId);
+//           // Simulate AI suggestion from Google Gemini (or similar)
+//           const userId = req.body.userId;  // Assume userId is passed in the request
+//           const aiSuggestedTimes = await getAiBookingSuggestions(userId);
   
-          // If the suggested times are available, you could offer them to the user
-          // (For simplicity, just logging the suggestions here)
-          console.log('AI Suggested Times:', aiSuggestedTimes);
+//           // If the suggested times are available, you could offer them to the user
+//           // (For simplicity, just logging the suggestions here)
+//           console.log('AI Suggested Times:', aiSuggestedTimes);
   
-          // Save booking in the database
-          const booking = await BookingModel.create(value);
+//           // Save booking in the database
+//           const booking = await BookingModel.create(value);
   
-          // Use Date-fns to handle time formatting and ensure correct date types
-          const startDateTime = parseISO(req.body.startDateTime);  // Ensure it's a valid Date object
-          const endDateTime = addHours(startDateTime, 1);  // Example: Add 1 hour for appointment duration
+//           // Use Date-fns to handle time formatting and ensure correct date types
+//           const startDateTime = parseISO(req.body.startDateTime);  // Ensure it's a valid Date object
+//           const endDateTime = addHours(startDateTime, 1);  // Example: Add 1 hour for appointment duration
   
-          // Format the start and end time using date-fns
-          const formattedStart = format(startDateTime, 'yyyyMMdd\'T\'HHmmss');
-          const formattedEnd = format(endDateTime, 'yyyyMMdd\'T\'HHmmss');
+//           // Format the start and end time using date-fns
+//           const formattedStart = format(startDateTime, 'yyyyMMdd\'T\'HHmmss');
+//           const formattedEnd = format(endDateTime, 'yyyyMMdd\'T\'HHmmss');
   
-          // Generate iCalendar file (ICS) for the booking
-          const event = {
-              start: [
-                  startDateTime.getFullYear(),
-                  startDateTime.getMonth() + 1, // Months are 0-based
-                  startDateTime.getDate(),
-                  startDateTime.getHours(),
-                  startDateTime.getMinutes(),
-              ],
-              end: [
-                  endDateTime.getFullYear(),
-                  endDateTime.getMonth() + 1,
-                  endDateTime.getDate(),
-                  endDateTime.getHours(),
-                  endDateTime.getMinutes(),
-              ],
-              title: req.body.title,
-              description: req.body.description,
-              location: req.body.location,
-              contactMode: req.body.contactMode,
-              status: 'CONFIRMED',
-          };
+//           // Generate iCalendar file (ICS) for the booking
+//           const event = {
+//               start: [
+//                   startDateTime.getFullYear(),
+//                   startDateTime.getMonth() + 1, // Months are 0-based
+//                   startDateTime.getDate(),
+//                   startDateTime.getHours(),
+//                   startDateTime.getMinutes(),
+//               ],
+//               end: [
+//                   endDateTime.getFullYear(),
+//                   endDateTime.getMonth() + 1,
+//                   endDateTime.getDate(),
+//                   endDateTime.getHours(),
+//                   endDateTime.getMinutes(),
+//               ],
+//               title: req.body.title,
+//               description: req.body.description,
+//               location: req.body.location,
+//               status: 'CONFIRMED',
+//           };
   
-          // Create the .ics file
-          createEvent(event, (error, value) => {
-              if (error) {
-                  console.error(error);
-                  return res.status(500).json({ message: 'Error generating calendar event' });
-              }
+//           // Create the .ics file
+//           createEvent(event, (error, value) => {
+//               if (error) {
+//                   console.error(error);
+//                   return res.status(500).json({ message: 'Error generating calendar event' });
+//               }
   
-              // Respond with ICS file as a downloadable attachment
-              res.setHeader('Content-Type', 'text/calendar');
-              res.setHeader('Content-Disposition', `attachment; filename="booking.ics"`);
-              res.status(201).send(value); // Send .ics file content
-          });
-  
-          res.status(201).json('Booking added successfully, and ICS file generated!');
-      } catch (error) {
-          next(error);
-      }
-  };
+//               // Respond with ICS file as a downloadable attachment
+//               res.setHeader('Content-Type', 'text/calendar');
+//               res.setHeader('Content-Disposition', `attachment; filename="booking.ics"`);
+//               res.status(201).send(value); // Send .ics file content
+//           });
+
+//           res.status(201).json({message: 'Booking added successfully, and ICS file generated!'});
+//       } catch (error) {
+//           next(error);
+//       }
+//   };
+
+export const addBooking = async (req, res, next) => {
+    try {
+        // Validate request body
+        const { error, value } = bookingValidationSchema.validate(req.body);
+        if (error) {
+            return res.status(422).json(error); 
+        }
+
+        // Simulate AI suggestion from Google Gemini (or similar)
+        const userId = req.body.userId;  // Assume userId is passed in the request
+        const aiSuggestedTimes = await getAiBookingSuggestions(userId);
+
+        // Log AI Suggested Times
+        console.log('AI Suggested Times:', aiSuggestedTimes);
+
+        // Save booking in the database
+        const booking = await BookingModel.create(value);
+
+        // Use Date-fns to handle time formatting and ensure correct date types
+        const startDateTime = parseISO(req.body.startDateTime);  // Ensure it's a valid Date object
+        const endDateTime = addHours(startDateTime, 1);  // Example: Add 1 hour for appointment duration
+
+        // Format the start and end time using date-fns
+        const formattedStart = format(startDateTime, "yyyyMMdd'T'HHmmss");
+        const formattedEnd = format(endDateTime, "yyyyMMdd'T'HHmmss");
+
+        // Generate iCalendar file (ICS) for the booking
+        const event = {
+            start: [
+                startDateTime.getFullYear(),
+                startDateTime.getMonth() + 1, // Months are 0-based
+                startDateTime.getDate(),
+                startDateTime.getHours(),
+                startDateTime.getMinutes(),
+            ],
+            end: [
+                endDateTime.getFullYear(),
+                endDateTime.getMonth() + 1,
+                endDateTime.getDate(),
+                endDateTime.getHours(),
+                endDateTime.getMinutes(),
+            ],
+            title: req.body.title,
+            description: req.body.description,
+            location: req.body.location,
+            status: 'CONFIRMED',
+        };
+
+        // Create the .ics file
+        createEvent(event, (error, value) => {
+            if (error) {
+                console.error(error);
+                return res.status(500).json({ message: 'Error generating calendar event' });
+            }
+
+            // Respond with ICS file as a downloadable attachment
+            res.setHeader('Content-Type', 'text/calendar');
+            res.setHeader('Content-Disposition', `attachment; filename="booking.ics"`);
+            res.status(201).send(value); // Send .ics file content as the final response
+        });
+
+    } catch (error) {
+        next(error);
+    }
+};
 
 
 
