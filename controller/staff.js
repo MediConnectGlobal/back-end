@@ -1,65 +1,112 @@
 import { StaffModel } from "../model/staff.js";
-import { staffValidationSchema, updateStaffValidationSchema } from "../validator/staff.js";
+import { logInStaffValidator, registerStaffValidator, updateStaffValidator } from "../validator/staff.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import {mailTransporter} from "../utils/mail.js";
 
-export const addStaff = async (req, res, next) => {
+export const registerStaff= async (req, res, next) => {
+  try {
+    // Validate user input
+    const {error, value} = registerStaffValidator.validate(req.body);
+    if (error) {
+        return res.status(422).json(error);
+    }
+    // Check if user does not exist
+    const staff = await StaffModel.findOne({email: value.email});
+    if (staff) {
+        return res.status(409).json('Staff already exist!');
+    }
 
+    // Hash their password
+    const hashedPassword = bcrypt.hashSync(value.password, 10);
+        // Save user into dataabase
+        await StaffModel.create({
+            ...value,
+            password: hashedPassword
+        });
+        // Send user confirmational email
+        await mailTransporter.sendMail({
+            to: value.email,
+            subject: 'Staff Registration',
+            text: 'Account registered successfully'
+        });
+
+        // Respond to request 
+      res.json('Staff registered')
+  } catch (error) {
+    next(error);
+    
+  }
+}
+
+export const logInStaff= async (req, res, next) => {
     try {
-        const { error, value } = staffValidationSchema.validate(req.body);
+        // Validate user input
+        const { error, value } = logInStaffValidator.validate(req.body)
         if (error) {
             return res.status(422).json(error);
         }
-        await StaffModel.create(value);
-        res.status(201).json('Staff added successfully');
-    } catch (error) {
-        next(error);
-    }
-}
-
-export const getAllStaff = async (req, res, next) => {
-    try {
-        const staff = await StaffModel.find();
-        res.status(200).json(staff);
-    } catch (error) {
-
-        next(error);
-
-    }
-}
-
-export const getOneStaff = async (req, res, next) => {
-    try {
-        const staff = await StaffModel.findById(req.params.id);
-        res.status(200).json(staff);
-    } catch (error) {
-        next(error)
-    }
-}
-
-
-export const updateStaff = async (req, res, next) => {
-    try {
-        const { error, value } = updateStaffValidationSchema.validate(req.body);
-        if (error) {
-            return res.status(422).json(error);
+        // find one user with identifier
+        const staff = await StaffModel.findOne({email: value.email });
+        if (!staff) {
+            return res.status(404).json('Staff does not exist!')
         }
-        await StaffModel.findByIdAndUpdate(req.params.id)
-        res.status(200).json('Staff updated Successfully!');
+        // Compare their passwords
+        const correctPassword = bcrypt.compareSync(value.password, user.password);
+        if (!correctPassword) {
+            return res.status(401).json('Invalid credentials!')
+        }
+        // Sign a token for user
+        const token = jwt.sign(
+            {id: user.id},
+            process.env.JWT_PRIVATE_KEY,
+            {expiresIn: '24h'}
+        );
+        // Respond to request
+
+        res.json({
+            message: 'Staff checked-in',
+            accessToken: token
+    });
     } catch (error) {
-        next(error)
+        next (error);
     }
 }
 
+export const getStaffProfile= async(req, res, next) => {
+   try {
+    console.log(req.auth);
+    // find authenticated user from database
+    const staff = await StaffModel
+    .findById(req.auth.id)
+    .select({ password: false });
+     res.json(staff);
+   } catch (error) {
+    next (error); 
+   }
+}
 
-
-export const deleteStaff = async (req, res, next) => {
-
+export const getAllStaffProfile= async(req, res, next) => {
     try {
-        await StaffModel.findByIdAndDelete(req.params.id)
-        res.status(200).json('Staff deleted Successfully!');
-
+     const staff = await StaffModel
+     .select({ password: false });
+      res.json(staff);
     } catch (error) {
-        next(error)
-
+     next (error); 
     }
+ }
 
+export const logOutStaff= (req, res, next) => {
+    res.json('Staff checked-out')
+}
+
+export const updateStaffProfile= (req, res, next) => {
+    try {
+        // Validate user input
+        const {error, value} = updateStaffValidator.validate(req.body);
+        res.json('Staff profile updated')
+    } catch (error) {
+        next (error);
+        
+    }
 }

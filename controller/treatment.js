@@ -1,5 +1,5 @@
-// import { BookingModel } from "../model/review.js";
-// import { bookingValidationSchema, updateBookingValidationSchema } from "../validator/review.js";
+import { TreatmentModel } from "../model/treatment.js";
+import { treatmentValidationSchema, updateTreatmentValidationSchema } from "../validator/treatment.js";
 
 export const addTreatment = async (req, res, next) => {
        try {

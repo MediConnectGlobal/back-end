@@ -7,8 +7,7 @@ export const registerUserValidator = Joi.object({
     contact: Joi.string().required(),
     password: Joi.string().required(),
     location: Joi.string().required(),
-    role: Joi.string().valid('patient', 'staff', 'admin'),
-    staffType: Joi.string()
+    role: Joi.string().valid('User'),
 });
 
 export const logInUserValidator = Joi.object({

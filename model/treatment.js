@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, plugin } from "mongoose";
 import { toJSON } from "@reis/mongoose-to-json";
 
 
@@ -18,5 +18,13 @@ export const treatmentSchema = new Schema ({
     comment: {type: String, required: true},
     nextVisit: {type: String, required: true}
 
+}, {
+    timestamps: true
 })
+
+treatmentSchema.plugin(toJSON)
+
+export const TreatmentModel = model('Treatment', treatmentSchema)
+
+
 

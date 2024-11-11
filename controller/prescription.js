@@ -1,3 +1,5 @@
+import { PrescriptionModel } from "../model/prescription.js";
+import { prescriptionValidationSchema, updatePrescriptionValidationSchema } from "../validator/prescription.js";
 
 export const addPrescription = async (req, res, next) => {
     try {

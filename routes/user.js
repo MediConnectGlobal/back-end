@@ -9,7 +9,9 @@ userRouter.post('/users/register', registerUser);
 
 userRouter.post('/users/login', logInUser);
 
-userRouter.get('/users/me', isAuthenticated, hasPermission('get_profile'), getProfile);
+userRouter.get('/users/me/:id', isAuthenticated, hasPermission('get_profile'), getProfile);
+
+userRouter.get('/users/me', isAuthenticated, hasPermission('get_all_profile'), getProfile);
 
 userRouter.post('/users/logout', isAuthenticated, logOutUser);
 

@@ -1,43 +1,31 @@
 import Joi from "joi";
 
-export const registerStaffValidator = Joi.object({
+export const registerAdminValidator = Joi.object({
     firstName: Joi.string().required(),
     lastName: Joi.string().required(),
     email: Joi.string().required(),
     contact: Joi.string().required(),
     password: Joi.string().required(),
-    role: Joi.string().valid('doctor', 'nurse', 'specialist'),
-    specialty: Joi.string(),
-    lincenceNumber: Joi.string().required(),
     facility: Joi.string().required(),
-    department: Joi.string().required()
+    role: Joi.string().valid('Admin', 'Super Admin'),
 });
 
-export const logInStaffValidator = Joi.object({
+export const logInAdminValidator = Joi.object({
     firstName: Joi.string(),
     lastName: Joi.string(),
-    email: Joi.string(),
+    email: Joi.string().required(),
     contact: Joi.string(),
     password: Joi.string().required(),
-    specialty: Joi.string(),
-    lincenceNumber: Joi.string(),
     facility: Joi.string(),
-    department: Joi.string()
     
 });
 
-export const updateStaffValidator = Joi.object({
+export const updateAdminValidator = Joi.object({
     firstName: Joi.string(),
     lastName: Joi.string(),
     email: Joi.string(),
     contact: Joi.string(),
     password: Joi.string(),
-    avatar: Joi.string(),
-    specialty: Joi.string(),
-    lincenceNumber: Joi.string(),
     facility: Joi.string(),
-    department: Joi.string()
+    avatar: Joi.string()
 });
-        
-        
-

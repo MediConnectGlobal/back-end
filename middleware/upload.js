@@ -11,6 +11,22 @@ export const userAvatarUpload = multer({
     preservePath: true
 });
 
+export const adminAvatarUpload = multer({
+    storage: multerSaveFilesOrg({
+        apiAccessToken: process.env.SAVEFILESORG_API_KEY,
+        relativePath: '/final project/users/*'
+    }),
+    preservePath: true
+});
+
+export const staffAvatarUpload = multer({
+    storage: multerSaveFilesOrg({
+        apiAccessToken: process.env.SAVEFILESORG_API_KEY,
+        relativePath: '/final project/users/*'
+    }),
+    preservePath: true
+});
+
 export const testfileUpload = multer({
     storage: multerSaveFilesOrg({
         apiAccessToken: process.env.SAVEFILESORG_API_KEY,

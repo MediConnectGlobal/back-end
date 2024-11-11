@@ -8,6 +8,7 @@ import bookingRouter from "./routes/booking.js";
 import testRouter from "./routes/test.js";
 import prescriptionRouter from "./routes/prescription.js";
 import treatmentRouter from "./routes/treatment.js";
+import adminRouter from "./routes/admin.js";
 
 // Connect to database
 await mongoose.connect(process.env.MONGO_URI);
@@ -27,6 +28,7 @@ app.use(bookingRouter)
 app.use(testRouter)
 app.use(prescriptionRouter)
 app.use(treatmentRouter)
+app.use(adminRouter)
 
 
 // Listen for incoming reqeusts
