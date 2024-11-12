@@ -52,13 +52,13 @@ export const logInStaff= async (req, res, next) => {
             return res.status(404).json('Staff does not exist!')
         }
         // Compare their passwords
-        const correctPassword = bcrypt.compareSync(value.password, user.password);
+        const correctPassword = bcrypt.compareSync(value.password, staff.password);
         if (!correctPassword) {
             return res.status(401).json('Invalid credentials!')
         }
         // Sign a token for user
         const token = jwt.sign(
-            {id: user.id},
+            {id: staff.id},
             process.env.JWT_PRIVATE_KEY,
             {expiresIn: '24h'}
         );
