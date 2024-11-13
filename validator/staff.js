@@ -6,8 +6,8 @@ export const registerStaffValidator = Joi.object({
     email: Joi.string().required(),
     contact: Joi.string().required(),
     password: Joi.string().required(),
-    role: Joi.string().valid('doctor', 'nurse', 'specialist'),
-    specialty: Joi.string(),
+    role: Joi.string(),
+    specialty: Joi.string().valid('Doctor', 'Nurse', 'Dentist', 'Specialist', 'Pharmacist'),
     lincenceNumber: Joi.string().required(),
     facility: Joi.string().required(),
     department: Joi.string().required()

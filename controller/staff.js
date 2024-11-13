@@ -89,6 +89,7 @@ export const getStaffProfile= async(req, res, next) => {
 export const getAllStaffProfile= async(req, res, next) => {
     try {
      const staff = await StaffModel
+     .find()
      .select({ password: false });
       res.json(staff);
     } catch (error) {

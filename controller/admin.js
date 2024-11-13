@@ -48,7 +48,7 @@ export const logInAdmin= async (req, res, next) => {
         }
         // find one user with identifier
         const admin = await AdminModel.findOne({email: value.email });
-        if (!user) {
+        if (!admin) {
             return res.status(404).json('Admin does not exist!')
         }
         // Compare their passwords
@@ -89,6 +89,7 @@ export const getAdminProfile= async(req, res, next) => {
 export const getAllAdminProfile= async(req, res, next) => {
     try {
      const admin = await AdminModel
+     .find()
      .select({ password: false });
       res.json(admin);
     } catch (error) {

@@ -8,11 +8,12 @@ email: {type: String, required: true, unique: true},
 contact: {type: String, required: false},
 password: { type: String, required: true},
 avatar: { type: String},
-role: {type: String, enum: ['doctor','nurse','specialist']},
-specialty: {type: String, required: true, enum: ['Physician Assistant', 'Dentist', 'Gy']},
+role: {type: String, default: "Staff"},
+specialty: {type: String, required: true, enum: ['Doctor', 'Nurse', 'Dentist', 'Specialist', 'Pharmacist']},
 lincenceNumber: {type: String, required: true},
 facility: {type: String, required: true},
-department: {type: String, required: true}
+department: {type: String, required: true},
+
 }, {
     timestamps: true
 });

@@ -4,6 +4,7 @@ import { toJSON } from "@reis/mongoose-to-json";
 const bookingSchema = new Schema ({
 title: {type: String, required: true},
 userId: {type: String, ref: 'User'},
+staffId: {type: String, ref: 'Staff'},
 location: {type: String, enum: ['Inperson','Online']},
 facility: {type: String, required: true},
 startDateTime: {type: String, required: true},

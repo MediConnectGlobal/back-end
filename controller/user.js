@@ -89,6 +89,7 @@ export const getProfile= async(req, res, next) => {
 export const getAllProfile= async(req, res, next) => {
     try {
      const user = await UserModel
+     .find()
      .select({ password: false });
       res.json(user);
     } catch (error) {
