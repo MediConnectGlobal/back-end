@@ -32,7 +32,7 @@ export const registerStaff= async (req, res, next) => {
         });
 
         // Respond to request 
-      res.json('Staff registered')
+      res.status(201).json('Staff registered')
   } catch (error) {
     next(error);
     
@@ -64,7 +64,7 @@ export const logInStaff= async (req, res, next) => {
         );
         // Respond to request
 
-        res.json({
+        res.status(200).json({
             message: 'Staff checked-in',
             accessToken: token
     });
@@ -80,7 +80,7 @@ export const getStaffProfile= async(req, res, next) => {
     const staff = await StaffModel
     .findById(req.auth.id)
     .select({ password: false });
-     res.json(staff);
+     res.status(200).json(staff);
    } catch (error) {
     next (error); 
    }
@@ -91,21 +91,21 @@ export const getAllStaffProfile= async(req, res, next) => {
      const staff = await StaffModel
      .find()
      .select({ password: false });
-      res.json(staff);
+      res.status(200).json(staff);
     } catch (error) {
      next (error); 
     }
  }
 
 export const logOutStaff= (req, res, next) => {
-    res.json('Staff checked-out')
+    res.status(200).json('Staff checked-out')
 }
 
 export const updateStaffProfile= (req, res, next) => {
     try {
         // Validate user input
         const {error, value} = updateStaffValidator.validate(req.body);
-        res.json('Staff profile updated')
+        res.status(200).json('Staff profile updated')
     } catch (error) {
         next (error);
         

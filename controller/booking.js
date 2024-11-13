@@ -164,7 +164,7 @@ export const getAllBookings = async(req, res, next) => {
        try {
 
        const bookings = await BookingModel.find(req.body);
-         res.json ({
+         res.status(200).json ({
             message: "All bookings",schedules: bookings});
        } catch (error) {
         next (error);

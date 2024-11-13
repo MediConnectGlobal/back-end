@@ -20,7 +20,7 @@ export const getAllPrescriptions = async(req, res, next) => {
     try {
 
     const prescription = await PrescriptionModel.find(req.body);
-      res.json (prescription);
+      res.status(200).json (prescription);
     } catch (error) {
      next (error);
      

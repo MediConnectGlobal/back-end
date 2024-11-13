@@ -20,7 +20,7 @@ export const getAllTreatments = async(req, res, next) => {
        try {
 
        const treatment = await TreatmentModel.find(req.body);
-         res.json (treatment);
+         res.status(200).json (treatment);
        } catch (error) {
         next (error);
         

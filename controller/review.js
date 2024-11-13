@@ -22,7 +22,7 @@ export const getAllReviews = async(req, res, next) => {
        try {
 
        const reviews = await ReviewModel.find(req.body);
-         res.json (reviews);
+         res.status(200).json (reviews);
        } catch (error) {
         next (error);
         

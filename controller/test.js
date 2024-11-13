@@ -19,7 +19,7 @@ export const getAllTest = async(req, res, next) => {
     try {
 
     const test = await TestModel.find(req.body);
-      res.json (test);
+      res.status(200).json (test);
     } catch (error) {
      next (error);
      

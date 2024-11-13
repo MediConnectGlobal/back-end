@@ -32,7 +32,7 @@ export const registerUser= async (req, res, next) => {
         });
 
         // Respond to request 
-      res.json('User registered')
+      res.status(201).json('User registered')
   } catch (error) {
     next(error);
     
@@ -64,7 +64,7 @@ export const logInUser= async (req, res, next) => {
         );
         // Respond to request
 
-        res.json({
+        res.status(200).json({
             message: 'User checked-in',
             accessToken: token
     });
@@ -80,7 +80,7 @@ export const getProfile= async(req, res, next) => {
     const user = await UserModel
     .findById(req.auth.id)
     .select({ password: false });
-     res.json(user);
+     res.status(200).json(user);
    } catch (error) {
     next (error); 
    }
@@ -91,21 +91,21 @@ export const getAllProfile= async(req, res, next) => {
      const user = await UserModel
      .find()
      .select({ password: false });
-      res.json(user);
+      res.status(200).json(user);
     } catch (error) {
      next (error); 
     }
  }
 
 export const logOutUser= (req, res, next) => {
-    res.json('User checked-out')
+    res.status(200).json('User checked-out')
 }
 
 export const updateProfile= (req, res, next) => {
     try {
         // Validate user input
         const {error, value} = updateUserValidator.validate(req.body);
-        res.json('User profile updated')
+        res.status(200).json('User profile updated')
     } catch (error) {
         next (error);
         

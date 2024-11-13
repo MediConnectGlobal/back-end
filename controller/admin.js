@@ -32,7 +32,7 @@ export const registerAdmin= async (req, res, next) => {
         });
 
         // Respond to request 
-      res.json('Admin registered')
+      res.status(201).json('Admin registered')
   } catch (error) {
     next(error);
     
@@ -64,7 +64,7 @@ export const logInAdmin= async (req, res, next) => {
         );
         // Respond to request
 
-        res.json({
+        res.status(200).json({
             message: 'Admin checked-in',
             accessToken: token
     });
@@ -80,7 +80,7 @@ export const getAdminProfile= async(req, res, next) => {
     const admin = await AdminModel
     .findById(req.auth.id)
     .select({ password: false });
-     res.json(admin);
+     res.status(200).json(admin);
    } catch (error) {
     next (error); 
    }
@@ -91,21 +91,21 @@ export const getAllAdminProfile= async(req, res, next) => {
      const admin = await AdminModel
      .find()
      .select({ password: false });
-      res.json(admin);
+      res.status(200).json(admin);
     } catch (error) {
      next (error); 
     }
  }
 
 export const logOutAdmin= (req, res, next) => {
-    res.json('Admin checked-out')
+    res.status(200).json('Admin checked-out')
 }
 
 export const updateAdminProfile= (req, res, next) => {
     try {
         // Validate user input
         const {error, value} = updateAdminValidator.validate(req.body);
-        res.json('Admin profile updated')
+        res.status(200).json('Admin profile updated')
     } catch (error) {
         next (error);
         
