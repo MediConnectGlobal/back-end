@@ -20,6 +20,7 @@
     "date-fns-tz": "^3.2.0",
     "express": "^4.21.1",
     "express-jwt": "^8.4.1",
+    "express-session": "^1.18.1",
     "gemini-ai": "^2.2.1",
     "googleapis": "^144.0.0",
     "ics": "^3.8.1",
@@ -28,7 +29,9 @@
     "mongoose": "^8.7.3",
     "multer": "^1.4.5-lts.1",
     "multer-savefilesorg": "^1.0.2",
-    "nodemailer": "^6.9.16"
+    "nodemailer": "^6.9.16",
+    "passport": "^0.7.0",
+    "passport-google-oauth2": "^0.2.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.7"

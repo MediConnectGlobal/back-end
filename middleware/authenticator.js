@@ -1,8 +1,8 @@
 // import jwt from "jsonwebtoken";
 import { expressjwt } from "express-jwt";
 import { UserModel } from "../model/user.js";
-import { AdminModel } from "../model/admin.js";
-import { StaffModel } from "../model/staff.js";
+// import { AdminModel } from "../model/admin.js";
+// import { StaffModel } from "../model/staff.js";
 import { permissions } from "../utils/rbac.js";
 
 export const isAuthenticated = expressjwt({
@@ -10,6 +10,13 @@ export const isAuthenticated = expressjwt({
     algorithms: ['HS256']
 });
 
+// export const isLoggedIn = (req, res, next) => {
+//     if (req.user) {
+//         next();
+//     } else {
+//         res.sendStatus(401); // Unauthorized
+//     }
+// };
 
 export const hasPermission = (action) => {
     return async (req, res, next) => {

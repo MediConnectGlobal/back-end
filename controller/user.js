@@ -3,6 +3,7 @@ import { logInUserValidator, registerUserValidator, updateUserValidator } from "
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import {mailTransporter} from "../utils/mail.js";
+import {registerEmailTemplate} from "../utils/emailTemplate.js";
 
 export const registerUser= async (req, res, next) => {
   try {
@@ -24,12 +25,25 @@ export const registerUser= async (req, res, next) => {
             ...value,
             password: hashedPassword
         });
-        // Send user confirmational email
-        await mailTransporter.sendMail({
-            to: value.email,
-            subject: 'User Registration',
-            text: 'Account registered successfully'
-        });
+        // // Send user confirmational email
+        // await mailTransporter.sendMail({
+        //     to: value.email,
+        //     subject: 'User Registration',
+        //     text: 'Account registered successfully'
+        // });
+
+        const emailContent = `
+    <h1>Welcome to MediConnect!</h1>
+                <p>Account registered successfully. We are excited to have you on board.Your health is our priority.</p>
+                <p>LogIn to interract with us.</p>
+                <p>Best regards</p>`
+    // Send professional a confirmation email
+    await mailTransporter.sendMail({
+      from: `MediConnect <mediconnectweb@gmail.com>`,
+      to: value.email,
+      subject: "User Registration",
+      html: registerEmailTemplate(emailContent)
+    });
 
         // Respond to request 
       res.status(201).json('User registered')
