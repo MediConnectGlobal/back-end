@@ -75,10 +75,10 @@ export const logInStaff= async (req, res, next) => {
 
 export const getStaffProfile= async(req, res, next) => {
    try {
-    console.log(req.auth);
+    console.log(req.params.id);
     // find authenticated user from database
     const staff = await StaffModel
-    .findById(req.auth.id)
+    .findById( req.params.id)
     .select({ password: false });
      res.status(200).json(staff);
    } catch (error) {
