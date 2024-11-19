@@ -9,9 +9,9 @@ staffRouter.post('/staff/register', registerStaff);
 
 staffRouter.post('/staff/login', logInStaff);
 
-staffRouter.get('/staff/me', getAllStaffProfile)
+staffRouter.get('/staff', getAllStaffProfile)
 
-staffRouter.get('/staff/me/:id', getStaffProfile);
+staffRouter.get('/staff/:id', getStaffProfile);
 
 staffRouter.post('/staff/logout', isAuthenticated, logOutStaff);
 

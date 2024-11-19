@@ -11,7 +11,7 @@ adminRouter.post('/admins/login', logInAdmin);
 
 adminRouter.get('/admins/me', isAuthenticated, getAdminProfile);
 
-adminRouter.get('/admins/me/:id', isAuthenticated, getAllAdminProfile);
+adminRouter.get('/admins', isAuthenticated, getAllAdminProfile);
 
 adminRouter.post('/admins/logout', isAuthenticated, logOutAdmin);
 

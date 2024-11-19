@@ -13,9 +13,9 @@ userRouter.post('/users/register', registerUser);
 
 userRouter.post('/users/login', logInUser);
 
-userRouter.get('/users/me/:id', getProfile);
+userRouter.get('/users/me', isAuthenticated, getProfile);
 
-userRouter.get('/users/me', isAuthenticated, getAllProfile);
+userRouter.get('/users', isAuthenticated, getAllProfile);
 
 userRouter.post('/users/logout', isAuthenticated, logOutUser);
 
