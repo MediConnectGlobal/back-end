@@ -8,7 +8,7 @@ bookingRouter.post('/bookings', isAuthenticated, addBooking);
 
 bookingRouter.get('/bookings/:id', isAuthenticated, getOneBooking);
 
-bookingRouter.get('/bookings', isAuthenticated, getAllBookings);
+bookingRouter.get('/bookings', getAllBookings);
 
 bookingRouter.patch('/bookings/:id',isAuthenticated, updateBooking);
 

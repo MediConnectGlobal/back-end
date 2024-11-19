@@ -38,7 +38,7 @@ export const addBooking = async (req, res, next) => {
         }
 
         // Simulate AI suggestion from Google Gemini (or similar)
-        const userName = req.params;
+        const userName = UserModel.findById(req.auth.id);
         const userId = req.auth.id; // Assuming `req.auth.id` contains the authenticated user's ID
         const staffId = req.body.staffId;
 
@@ -63,12 +63,12 @@ export const addBooking = async (req, res, next) => {
         const booking = await BookingModel.create({
             ...value,
             userId: req.auth.id,
-            // userName: req.params.id,
-            StaffId: req.params
-        }).poopulate('user');
+            userName: User.firstName,
+            StaffId: req.body.staffId
+        });
 
         const emailContent = `
-        <h2>Hi ${User.firstName}<h2>
+        <p>Hi ${User.firstName}<p>
         <h1>Welcome to MediConnect!</h1>
                     <p>Appointment booked successfully.</p>
                     <p>LogIn to interract with us.</p>
@@ -135,11 +135,13 @@ export const addBooking = async (req, res, next) => {
 export const getAllBookings = async (req, res, next) => {
     try {
 
-        const bookings = await BookingModel.find(req.body).poopulate('userId');
+        const bookings = await BookingModel.find(req.body)
+        .populate({  path: 'staffId userId',
+            select: 'firstName lastName contact email specialty location facility department' });
+           
         res.status(200).json({
             message: "All bookings", schedules: bookings
-        })
-        .poopulate('user');
+        });
     } catch (error) {
         next(error);
 
@@ -147,9 +149,18 @@ export const getAllBookings = async (req, res, next) => {
 }
 
 export const getOneBooking = async (req, res, next) => {
-    try {
-        const bookings = await BookingModel.findById(req.params.id).populate('user');
-        res.status(200).json(bookings);
+    try { 
+        const booking = await BookingModel.findOne({
+            _id: req.params.id,
+            userId: req.auth.id  // Ensure the booking belongs to the authenticated user
+        })
+        .populate({  path: 'staffId userId',
+            select: 'firstName lastName contact email specialty location facility department' });
+        // Check if the booking was found
+        if (!booking) {
+            return res.status(404).json({ message: 'Booking not found' });
+        }
+        res.status(200).json(booking);
     } catch (error) {
         next(error)
     }
