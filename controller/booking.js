@@ -1,47 +1,86 @@
 import { BookingModel } from "../model/booking.js";
+import { UserModel } from "../model/user.js";
+import { StaffModel } from "../model/staff.js";
 import { bookingValidationSchema, updateBookingValidationSchema } from "../validator/booking.js";
 import { createEvent } from 'ics';
 import { format, parseISO, addHours } from 'date-fns';  // Import date-fns
 import { google } from "googleapis";
+import { mailTransporter } from "../utils/mail.js";
+import { registerEmailTemplate } from "../utils/emailTemplate.js";
 // Google APIs for potential Gemini integration
 
 
 const auth = new google.auth.GoogleAuth({
     keyFile: 'path/to/your-service-account.json',  // Replace with the path to your service account file
     scopes: ['https://www.googleapis.com/auth/calendar'],  // Define the necessary scopes
-  });
-  
-  const calendar = google.calendar({ version: 'v3', auth });
+});
+
+const calendar = google.calendar({ version: 'v3', auth });
 
 
 const getAiBookingSuggestions = async (userId) => {
     // This function would interact with Google Gemini or a similar AI API
     // Simulate a response that could suggest times based on past data
     const aiSuggestions = [
-      '2024-11-15T14:30:00', // Suggested based on past bookings
-      '2024-11-15T16:00:00'
+        '2024-11-15T14:30:00', // Suggested based on past bookings
+        '2024-11-15T16:00:00'
     ];
     return aiSuggestions; // Return suggested times
-  };
-  
+};
+
 
 export const addBooking = async (req, res, next) => {
     try {
         // Validate request body
         const { error, value } = bookingValidationSchema.validate(req.body);
         if (error) {
-            return res.status(422).json(error); 
+            return res.status(422).json(error);
         }
 
         // Simulate AI suggestion from Google Gemini (or similar)
-        const userId = req.body.userId;  // Assume userId is passed in the request
+        const userName = req.params;
+        const userId = req.auth.id; // Assuming `req.auth.id` contains the authenticated user's ID
+        const staffId = req.body.staffId;
+
+        // Fetch the user to get their first name
+        const User = await UserModel.findById(userId);
+        if (!User) {
+            return res.status(404).json('User  not found');
+        }
+
+        const Staff = await StaffModel.findById(staffId);
+        if (!Staff) {
+            return res.status(404).json('Staff  not found');
+        }
+
+
         const aiSuggestedTimes = await getAiBookingSuggestions(userId);
 
         // Log AI Suggested Times
         console.log('AI Suggested Times:', aiSuggestedTimes);
 
         // Save booking in the database
-        const booking = await BookingModel.create(value);
+        const booking = await BookingModel.create({
+            ...value,
+            userId: req.auth.id,
+            // userName: req.params.id,
+            StaffId: req.params
+        }).poopulate('user');
+
+        const emailContent = `
+        <h2>Hi ${User.firstName}<h2>
+        <h1>Welcome to MediConnect!</h1>
+                    <p>Appointment booked successfully.</p>
+                    <p>LogIn to interract with us.</p>
+                    <p>Best regards</p>`
+        // Send professional a confirmation email
+        await mailTransporter.sendMail({
+            from: `MediConnect <mediconnectweb@gmail.com>`,
+            to: User.email,
+            subject: "Booking Confirmation",
+            html: registerEmailTemplate(emailContent)
+        });
+
 
         // Use Date-fns to handle time formatting and ensure correct date types
         const startDateTime = parseISO(req.body.startDateTime);  // Ensure it's a valid Date object
@@ -93,22 +132,24 @@ export const addBooking = async (req, res, next) => {
 
 
 
-export const getAllBookings = async(req, res, next) => {
-       try {
+export const getAllBookings = async (req, res, next) => {
+    try {
 
-       const bookings = await BookingModel.find(req.body);
-         res.status(200).json ({
-            message: "All bookings",schedules: bookings});
-       } catch (error) {
-        next (error);
-        
-       }
+        const bookings = await BookingModel.find(req.body).poopulate('userId');
+        res.status(200).json({
+            message: "All bookings", schedules: bookings
+        })
+        .poopulate('user');
+    } catch (error) {
+        next(error);
+
+    }
 }
 
-export const getOneBooking = async(req, res, next) => {
+export const getOneBooking = async (req, res, next) => {
     try {
-        const bookings = await BookingModel.findById(req.params.id);
-        res.status(200).json (bookings);
+        const bookings = await BookingModel.findById(req.params.id).populate('user');
+        res.status(200).json(bookings);
     } catch (error) {
         next(error)
     }
@@ -118,11 +159,11 @@ export const getOneBooking = async(req, res, next) => {
 export const updateBooking = async (req, res, next) => {
     try {
 
-         // validator
-         const {error, value} = updateBookingValidationSchema.validate(req.body);
-         if (error) {
-             return res.status(422).json(error);
-         }
+        // validator
+        const { error, value } = updateBookingValidationSchema.validate(req.body);
+        if (error) {
+            return res.status(422).json(error);
+        }
         await BookingModel.findByIdAndUpdate(req.params.id)
         res.status(200).json('Booking updated Successfully!');
     } catch (error) {

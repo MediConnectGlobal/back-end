@@ -3,6 +3,7 @@ import { logInAdminValidator, registerAdminValidator, updateAdminValidator } fro
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import {mailTransporter} from "../utils/mail.js";
+import { registerEmailTemplate } from "../utils/emailTemplate.js";
 
 export const registerAdmin= async (req, res, next) => {
   try {
@@ -25,10 +26,19 @@ export const registerAdmin= async (req, res, next) => {
             password: hashedPassword
         });
         // Send user confirmational email
+       
+        const emailContent = `
+        <p>Hi ${value.firstName}<p>
+        <h1>Welcome to MediConnect!</h1>
+                    <p>Account registered successfully. We are excited to have you on board.</p>
+                    <p>LogIn to interract with us.</p>
+                    <p>Best regards</p>`
+        // Send professional a confirmation email
         await mailTransporter.sendMail({
-            to: value.email,
-            subject: 'Admin Registration',
-            text: 'Account registered successfully'
+          from: `MediConnect <mediconnectweb@gmail.com>`,
+          to: value.email,
+          subject: "Admin Registration",
+          html: registerEmailTemplate(emailContent)
         });
 
         // Respond to request 

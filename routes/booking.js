@@ -4,14 +4,14 @@ import { isAuthenticated, hasPermission } from "../middleware/authenticator.js";
 
 const bookingRouter = Router();
 
-bookingRouter.post('/bookings', addBooking);
+bookingRouter.post('/bookings', isAuthenticated, addBooking);
 
-bookingRouter.get('/bookings', isAuthenticated, hasPermission('get_booking'), getOneBooking);
+bookingRouter.get('/bookings/:id', isAuthenticated, getOneBooking);
 
-bookingRouter.get('/bookings', isAuthenticated, hasPermission('get_all_booking'), getAllBookings);
+bookingRouter.get('/bookings', isAuthenticated, getAllBookings);
 
-bookingRouter.patch('/bookings', updateBooking);
+bookingRouter.patch('/bookings/:id',isAuthenticated, updateBooking);
 
-bookingRouter.delete('/bookings', deleteBooking);
+bookingRouter.delete('/bookings/:id',isAuthenticated, deleteBooking);
 
 export default bookingRouter;

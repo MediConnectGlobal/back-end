@@ -6,12 +6,12 @@ const treatmentRouter = Router();
 
 treatmentRouter.post('/treatments', addTreatment);
 
-treatmentRouter.get('/treatments', isAuthenticated, hasPermission('get_treatment'), getOneTreatment);
+treatmentRouter.get('/treatments', isAuthenticated, getOneTreatment);
 
-treatmentRouter.get('/treatments/:id', isAuthenticated, hasPermission('get_all_traetment'), getAllTreatments);
+treatmentRouter.get('/treatments/:id', isAuthenticated, getAllTreatments);
 
-treatmentRouter.patch('/treatments/:id', updateTreatment);
+treatmentRouter.patch('/treatments/:id',isAuthenticated, updateTreatment);
 
-treatmentRouter.delete('/treatments/:id', deleteTreatment);
+treatmentRouter.delete('/treatments/:id', isAuthenticated, deleteTreatment);
 
 export default treatmentRouter;

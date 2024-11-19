@@ -33,6 +33,7 @@ export const registerUser= async (req, res, next) => {
         // });
 
         const emailContent = `
+        <p>Hi ${value.firstName}<p>
     <h1>Welcome to MediConnect!</h1>
                 <p>Account registered successfully. We are excited to have you on board.Your health is our priority.</p>
                 <p>LogIn to interract with us.</p>
@@ -89,10 +90,10 @@ export const logInUser= async (req, res, next) => {
 
 export const getProfile= async(req, res, next) => {
    try {
-    console.log(req.auth);
+    console.log(req.params.id);
     // find authenticated user from database
     const user = await UserModel
-    .findById(req.auth.id)
+    .findById(req.params.id)
     .select({ password: false });
      res.status(200).json(user);
    } catch (error) {

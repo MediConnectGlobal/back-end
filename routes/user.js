@@ -13,12 +13,12 @@ userRouter.post('/users/register', registerUser);
 
 userRouter.post('/users/login', logInUser);
 
-userRouter.get('/users/me/:id', isAuthenticated, getProfile);
+userRouter.get('/users/me/:id', getProfile);
 
-userRouter.get('/users/me', isAuthenticated, hasPermission('get_all_profile'), getAllProfile);
+userRouter.get('/users/me', isAuthenticated, getAllProfile);
 
 userRouter.post('/users/logout', isAuthenticated, logOutUser);
 
-userRouter.patch('/users/me', isAuthenticated, hasPermission('update_profile'), userAvatarUpload.single('avatar'), updateProfile);
+userRouter.patch('/users/me', isAuthenticated, userAvatarUpload.single('avatar'), updateProfile);
 
 export default userRouter;

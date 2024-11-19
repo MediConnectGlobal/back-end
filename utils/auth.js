@@ -1,76 +1,60 @@
-
-// import axios from 'axios';
-// import UserModel from '../models/UserModel'; // Adjust the path based on your file structure
-
-// export const googleAuth = async (req, res) => {
-//   try {
-//     const { credential } = req.body;
-
-//     if (!credential) {
-//       return res.status(400).json({ error: 'Google credential is required' });
-//     }
-
-//     // Verify the Google token
-//     const response = await axios.get(
-//       `https://oauth2.googleapis.com/tokeninfo?id_token=${credential}`
-//     );
-
-//     // Destructure relevant user data
-//     const { email, name, picture } = response.data;
-
-//     if (!email || !name || !picture) {
-//       return res.status(400).json({ error: 'Invalid Google token data' });
-//     }
-
-//     // Check if the user exists in the database
-//     let user = await UserModel.findOne({ email });
-
-//     if (!user) {
-//       // Create a new user if not found
-//       user = new UserModel({
-//         email,
-//         firstName: name.split(' ')[0], // First part of name as firstName
-//         lastName: name.split(' ')[1] || '', // Second part as lastName, if it exists
-//         avatar: picture,
-//       });
-
-//       // Save the new user to the database
-//       await user.save();
-//     }
-
-//     // Send user info back to the frontend
-//     res.status(200).json({ user });
-//   } catch (error) {
-//     console.error('Error during Google authentication:', error.message);
-//     res.status(500).json({ error: 'Authentication failed' });
-//   }
-// };
-
-
-// var GoogleStrategy = require( 'passport-google-oauth2' ).Strategy;
-
-import GoogleStrategy from 'passport-google-oauth2';
 import passport from 'passport';
-
+import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
+import UserModel from '../models/UserModel.js';
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+const CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL || 'http://localhost:3000/google/callback';
 
 passport.use(new GoogleStrategy({
-    clientID:     GOOGLE_CLIENT_ID,
+    clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: process.env.GOOGLE_CALLBACK_URL,
-    passReqToCallback   : true
+    callbackURL: CALLBACK_URL,
+    passReqToCallback: true
   },
-  function(request, accessToken, refreshToken, profile, done) {
-    // User.findOrCreate({ googleId: profile.id }, function (err, user) 
-      return done(err, profile);
+  async function(request, accessToken, refreshToken, profile, done) {
+    try {
+      // Check if user exists in database
+      let user = await UserModel.findOne({ email: profile.email });
+      
+      if (!user) {
+        // Create new user if doesn't exist
+        user = new UserModel({
+          email: profile.email,
+          firstName: profile.given_name,
+          lastName: profile.family_name,
+          avatar: profile.picture,
+          googleId: profile.id
+        });
+        await user.save();
+      }
+      
+      return done(null, user);
+    } catch (error) {
+      return done(error, null);
+    }
   }
 ));
-passport.serializeUser(function(user, done) {
-  done(null, user);
+
+passport.serializeUser((user, done) => {
+  done(null, user.id);
 });
-passport.deserializeUser(function(user, done) {
-  done(null, user);
+
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await UserModel.findById(id);
+    done(null, user);
+  } catch (error) {
+    done(error, null);
+  }
 });
-  
+
+// Middleware to check if user is authenticated
+export const isAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'Unauthorized' });
+};
+
+export default passport;
