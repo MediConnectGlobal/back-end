@@ -9,7 +9,7 @@ import testRouter from "./routes/test.js";
 import prescriptionRouter from "./routes/prescription.js";
 import treatmentRouter from "./routes/treatment.js";
 import adminRouter from "./routes/admin.js";
-import passport from "passport";
+import passport from "./utils/auth.js";
 import session from "express-session";
 // Connect to database
 await mongoose.connect(process.env.MONGO_URI);
@@ -50,16 +50,17 @@ app.get('/', (req, res) => {
 });
 app.get('/auth/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
 
-app.get('/google/callback', passport.authenticate('google', { 
+app.get('/google/callback', passport.authenticate('google', {
     successRedirect: '/protected',
-    failureRedirect: '/' 
+    failureRedirect: '/'
 })
 );
 app.get('/protected', isloggedIn, (req, res) => {
-    res.send(`Welcome, you are logged in! ${req.user.displayName}`);
+    // console.log(req.user);
+    res.send(`Welcome, you are logged in! ${req.user.email}`);
 })
 
-app.get ('/logout', (req, res) => {
+app.get('/logout', (req, res) => {
     req.logout();
     req.session.destroy();
     res.send('/Goodbye!');
@@ -67,6 +68,6 @@ app.get ('/logout', (req, res) => {
 
 // Listen for incoming reqeusts
 app.listen(process.env.PORT, () => {
-    console. log(`App is listening on port ${process.env.PORT}`);
+    console.log(`App is listening on port ${process.env.PORT}`);
 
 });
