@@ -90,10 +90,10 @@ export const logInUser= async (req, res, next) => {
 
 export const getProfile= async(req, res, next) => {
    try {
-    console.log(req.auth.id);
+    console.log(req.params.id);
     // find authenticated user from database
     const user = await UserModel
-    .findById(req.auth.id)
+    .findById(req.params.id)
     .select({ password: false });
      res.status(200).json(user);
    } catch (error) {
