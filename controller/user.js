@@ -47,7 +47,7 @@ export const registerUser= async (req, res, next) => {
     });
 
         // Respond to request 
-      res.status(201).json('User registered')
+      res.status(201).json({message: 'User registered', user});
   } catch (error) {
     next(error);
     
@@ -81,7 +81,9 @@ export const logInUser= async (req, res, next) => {
 
         res.status(200).json({
             message: 'User checked-in',
-            accessToken: token
+            accessToken: token,
+            user
+
     });
     } catch (error) {
         next (error);
