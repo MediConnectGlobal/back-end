@@ -122,7 +122,7 @@ export const updateProfile= (req, res, next) => {
     try {
         // Validate user input
         const {error, value} = updateUserValidator.validate(req.body);
-        res.status(200).json('User profile updated')
+        res.status(200).json({message:'User profile updated', user})
     } catch (error) {
         next (error);
         
