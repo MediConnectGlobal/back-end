@@ -124,8 +124,8 @@ export const updatePrescription = async (req, res, next) => {
       if (error) {
           return res.status(422).json(error);
       }
-     await PrescriptionModel.findByIdAndUpdate(req.params.id)
-     res.status(200).json('Prescription updated Successfully!');
+     const prescription = await PrescriptionModel.findByIdAndUpdate(req.params.id)
+    res.status(200).json({message:'Prescription updated Successfully!', prescription});
  } catch (error) {
      next(error);
 

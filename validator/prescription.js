@@ -15,9 +15,9 @@ export const updatePrescriptionValidationSchema = Joi.object({
     userId: Joi.string(),
     medication: Joi.array().items(
         Joi.object({
-            drug: Joi.string().required(),
-            dose: Joi.string().required(),
-            days: Joi.string().required(),
+            drug: Joi.string(),
+            dose: Joi.string(),
+            days: Joi.string(),
         })
     )
 });

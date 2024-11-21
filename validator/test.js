@@ -1,7 +1,8 @@
 import Joi from "joi";
 
 export const testValidationSchema = Joi.object({
-   Test: Joi.array().items(
+    userId: Joi.string().required(),
+   test: Joi.array().items(
        Joi.object({
            testType: Joi.string().required(),
            issued: Joi.string().required(),
@@ -11,7 +12,8 @@ export const testValidationSchema = Joi.object({
 }).required()
 
 export const updateTestValidationSchema = Joi.object({
-    Test: Joi.array().items(
+    userId: Joi.string(),
+    test: Joi.array().items(
         Joi.object({
 testType: Joi.string(),
 issued: Joi.string(),

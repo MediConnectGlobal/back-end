@@ -4,11 +4,16 @@ import { Types, Schema, model } from "mongoose";
 const testSchema = new Schema({
     userId: {type: Types.ObjectId, ref: 'User'},
     staffId: {type: Types.ObjectId, ref: 'Staff'},
-    testType: {type: String, required: true},
-    issued: {type: String, required: true},
-    comment: {type: String, required: true},
-    file: {type: String},
-    image: { type: String}
+    test: [
+        {
+        testType: {type: String, required: true},
+        issued: {type: String, required: true},
+        comment: {type: String, required: true},
+        file: {type: String},
+        image: { type: String}
+    },
+],
+    
 }, {
     timestamps: true
 })
