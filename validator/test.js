@@ -1,16 +1,23 @@
 import Joi from "joi";
 
 export const testValidationSchema = Joi.object({
-    testType: Joi.string().required(),
-    issued: Joi.string().required(),
-    comment: Joi.string(),
-    file: Joi.string(),
-    image: Joi.string()
-})
+   Test: Joi.array().items(
+       Joi.object({
+           testType: Joi.string().required(),
+           issued: Joi.string().required(),
+           comment: Joi.string(), 
+       }) 
+   )   
+}).required()
+
 export const updateTestValidationSchema = Joi.object({
+    Test: Joi.array().items(
+        Joi.object({
 testType: Joi.string(),
 issued: Joi.string(),
 comment: Joi.string(),
 file: Joi.string().required(),
 image: Joi.string()
-})
+    })
+)
+ })

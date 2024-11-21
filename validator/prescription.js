@@ -1,13 +1,23 @@
 import Joi from "joi";
 
 export const prescriptionValidationSchema = Joi.object({
-    medication: Joi.string().required(),
-    dose: Joi.string().required(),
-    days: Joi.string().required()
+    userId: Joi.string().required(),
+     medication: Joi.array().items(
+        Joi.object({
+            drug: Joi.string().required(),
+            dose: Joi.string().required(),
+            days: Joi.string().required(),
+        })
+    ).required(),
 });
 
 export const updatePrescriptionValidationSchema = Joi.object({
-    medication: Joi.string().required(),
-    dose: Joi.string(),
-    days: Joi.string()
+    userId: Joi.string(),
+    medication: Joi.array().items(
+        Joi.object({
+            drug: Joi.string().required(),
+            dose: Joi.string().required(),
+            days: Joi.string().required(),
+        })
+    )
 });

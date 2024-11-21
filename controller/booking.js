@@ -72,6 +72,13 @@ export const addBooking = async (req, res, next) => {
         <h1>Welcome to MediConnect!</h1>
                     <p>Appointment booked successfully.</p>
                     <p>LogIn to interract with us.</p>
+                     <ul>
+        <li><strong>Booking ID:</strong> ${booking.id}</li>
+        <li><strong>Date:</strong> ${booking.startDateTime}</li>
+        <li><strong>Time:</strong> ${booking.endDateTime}</li>
+       <li><strong>Doctor:</strong> Dr. ${Staff.firstName} ${Staff.lastName}</li>
+        <li><strong>Location:</strong> ${booking.location}</li>
+    </ul>
                     <p>Best regards</p>`
         // Send professional a confirmation email
         await mailTransporter.sendMail({

@@ -1,8 +1,10 @@
-import { Schema, model, plugin } from "mongoose";
+import { Schema, model, Types } from "mongoose";
 import { toJSON } from "@reis/mongoose-to-json";
 
 
 export const treatmentSchema = new Schema ({
+    userId: {type: Types.ObjectId, ref: 'User'},
+    staffId: {type: Types.ObjectId, ref: 'Staff'},
     vitals: [{
         temperature: {type: String, required: true}, 
         pulse: {type: String, required: true}, 

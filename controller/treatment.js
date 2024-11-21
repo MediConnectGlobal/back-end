@@ -9,7 +9,27 @@ export const addTreatment = async (req, res, next) => {
              return res.status(422).json(error);
          }
 
-        await TreatmentModel.create(req.body);
+          // Extract IDs
+        const staffId = req.auth.id; // Ensure req.auth is not undefined
+        const userId = req.body.userId;
+
+
+        // Fetch User
+        const User = await UserModel.findById(userId);
+        if (!User) {
+            return res.status(404).json({ message: "User not found." });
+        }
+
+        // Fetch Staff
+        const Staff = await StaffModel.findById(staffId);
+        if (!Staff) {
+            return res.status(404).json({ message: "Staff not found." });
+        }
+
+        const treatment = await TreatmentModel.create({
+            ...value,
+            staff: staffId,
+            user: userId,});
          res.status(201).json ('Treatment added Successfully!');
        } catch (error) {
         next(error); 
