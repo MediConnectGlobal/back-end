@@ -120,7 +120,7 @@ export const logOutUser= (req, res, next) => {
 
 export const updateProfile= async (req, res, next) => {
     try {
-        const user = await UserModel.findById(req.params.id);
+        const user = await UserModel.findById(req.auth.id);
         // Validate user input
         const {error, value} = updateUserValidator.validate(req.body);
         res.status(200).json({message:'User profile updated', user})
