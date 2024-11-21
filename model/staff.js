@@ -9,12 +9,13 @@ contact: {type: String, required: false},
 password: { type: String, required: true},
 avatar: { type: String},
 role: {type: String, default: "Staff"},
-specialty: {type: String, required: true, enum: ['Doctor', 'Nurse', 'Dentist', 'Specialist', 'Pharmacist']},
+specialty: {type: String, required: true, enum: ['Doctor', 'Nurse', 'Dentist','Dietician','Specialist', 'Pharmacist', 'Dermatologist', 'Cardiologist', 'Anesthesiologist','Gynecologist', 'Midwife', 'Speech-Language Therapist', 'Thereapist', 'Radiologist', 'Surgeon', 'Optometrist (eyes)', 'Psychologist', 'Psychiatrist', 'Audiologist (ear)', 'Others']},
 lincenceNumber: {type: String, required: true},
 facility: {type: String, required: true},
 department: {type: String, required: true},
 
 }, {
+
     timestamps: true
 });
 
