@@ -5,7 +5,7 @@ export const bookingValidationSchema = Joi.object ({
     // userId: Joi.string().required(),
     staffId: Joi.string().required(),
     facility: Joi.string().required(),
-    location: Joi.string().valid('Inperson', 'Online'),
+    location: Joi.string().valid('Inperson', 'Online', 'Hybrid'),
     startDateTime: Joi.string().required(),
     endDateTime: Joi.string().required()
 });
